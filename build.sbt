@@ -10,8 +10,9 @@ ThisBuild / developers       := List(
   tlGitHubDev("jwojnowski", "Jakub Wojnowski")
 )
 
-ThisBuild / tlSonatypeUseLegacyHost := false
-ThisBuild / tlCiReleaseBranches     := Seq("main")
+ThisBuild / tlSonatypeUseLegacyHost    := false
+ThisBuild / tlCiReleaseBranches        := Seq("main")
+ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("21"))
 
 val Scala213 = "2.13.12"
 ThisBuild / crossScalaVersions := Seq(Scala213, "3.3.1")
@@ -34,5 +35,3 @@ lazy val core =
         "co.fs2"        %% "fs2-core"                % "3.7.0"  % Test
       )
     )
-
-lazy val docs = project.in(file("site")).enablePlugins(TypelevelSitePlugin)
