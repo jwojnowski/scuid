@@ -10,8 +10,9 @@ ThisBuild / developers       := List(
   tlGitHubDev("jwojnowski", "Jakub Wojnowski")
 )
 
-ThisBuild / tlSonatypeUseLegacyHost := false
-ThisBuild / tlCiReleaseBranches     := Seq("main")
+ThisBuild / tlSonatypeUseLegacyHost    := false
+ThisBuild / tlCiReleaseBranches        := Seq("main")
+ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("21"))
 
 // publish website from this branch
 ThisBuild / tlSitePublishBranch := Some("main")
@@ -37,5 +38,3 @@ lazy val core =
         "co.fs2"        %% "fs2-core"                % "3.7.0"  % Test
       )
     )
-
-lazy val docs = project.in(file("site")).enablePlugins(TypelevelSitePlugin)
