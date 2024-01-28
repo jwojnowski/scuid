@@ -60,6 +60,10 @@ There are three options for length of the generated ID:
 2. `Cuid2Long` - 32 characters
 3. `Cuid2Custom[n]` - custom length (parametrised using literal types, e.g. `Cuid2Custom[10]` or `Cuid2Custom[27]`)
 
+### Note on SHA3 support
+This library uses SHA3, which is available from JDK 9 (b119) onwards. Alternative implementation can be provided via
+`Cuid2Gen.custom`.
+
 ## Validation
 ```scala
 val idDefault: Option[Cuid2]                = Cuid2.validate("r0o5ncoizclu1b9iraz620cn")
