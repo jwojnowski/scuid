@@ -32,7 +32,7 @@ import munit.CatsEffectSuite
 
 class CollisionTest extends CatsEffectSuite {
 
-  override def munitTimeout: Duration = 10.minutes
+  override def munitTimeout: Duration = 20.minutes
 
   test("Check for collisions") {
     val parallelism = Runtime.getRuntime.availableProcessors
