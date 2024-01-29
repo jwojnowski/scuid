@@ -44,6 +44,13 @@ abstract sealed class Cuid2Custom[L <: Int](private val value: String)(implicit 
   def render: String = value
 
   override def toString: String = render
+
+  override def equals(other: Any): Boolean = other match {
+    case that: Cuid2Custom[_] => value == that.value
+    case _                    => false
+  }
+
+  override def hashCode(): Int = value.hashCode
 }
 
 abstract sealed case class Cuid2(private val value: String)     extends Cuid2Custom[24](value) {}
@@ -53,24 +60,24 @@ object Cuid2 {
   def validate(rawString: String): Option[Cuid2] =
     Option.when(isValid[24](rawString))(new Cuid2(rawString) {})
 
-  val order: Order[Cuid2]       = Order.by(_.value)
-  val ordering: Ordering[Cuid2] = order.toOrdering
-  val show: Show[Cuid2]         = Show.show(_.value)
+  implicit val order: Order[Cuid2]       = Order.by(_.value)
+  implicit val ordering: Ordering[Cuid2] = order.toOrdering
+  implicit val show: Show[Cuid2]         = Show.show(_.value)
 }
 
 object Cuid2Long {
   def validate(rawString: String): Option[Cuid2Long] =
     Option.when(isValid[32](rawString))(new Cuid2Long(rawString) {})
 
-  val order: Order[Cuid2Long]       = Order.by(_.value)
-  val ordering: Ordering[Cuid2Long] = order.toOrdering
-  val show: Show[Cuid2Long]         = Show.show(_.value)
+  implicit val order: Order[Cuid2Long]       = Order.by(_.value)
+  implicit val ordering: Ordering[Cuid2Long] = order.toOrdering
+  implicit val show: Show[Cuid2Long]         = Show.show(_.value)
 }
 
 object Cuid2Custom {
-  def order[L <: Int]: Order[Cuid2Custom[L]]       = Order.by(_.value)
-  def ordering[L <: Int]: Ordering[Cuid2Custom[L]] = order[L].toOrdering
-  def show[L <: Int]: Show[Cuid2Custom[L]]         = Show.show(_.value)
+  implicit def order[L <: Int]: Order[Cuid2Custom[L]]       = Order.by(_.value)
+  implicit def ordering[L <: Int]: Ordering[Cuid2Custom[L]] = order[L].toOrdering
+  implicit def show[L <: Int]: Show[Cuid2Custom[L]]         = Show.show(_.value)
 
   def validate[L <: Int: ValueOf](rawString: String): Option[Cuid2Custom[L]] =
     Option.when(isValid[L](rawString))(new Cuid2Custom(rawString) {})
