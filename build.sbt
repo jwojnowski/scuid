@@ -35,3 +35,17 @@ lazy val core =
         "co.fs2"        %% "fs2-core"                % "3.7.0"  % Test
       )
     )
+
+lazy val circe =
+  project
+    .in(file("circe"))
+    .dependsOn(core)
+    .settings(
+      name := "scuid-circe",
+      libraryDependencies ++= Seq(
+        "io.circe"      %% "circe-core"       % "0.14.6",
+        "io.circe"      %% "circe-literal"    % "0.14.6" % Test,
+        "org.scalameta" %% "munit"            % "0.7.29" % Test,
+        "org.scalameta" %% "munit-scalacheck" % "0.7.29" % Test
+      )
+    )

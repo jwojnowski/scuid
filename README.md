@@ -26,6 +26,7 @@ of the [original implementation](https://github.com/paralleldrive/cuid2?tab=read
 ### SBT
 ```scala
 libraryDependencies += "me.wojnowski" %% "scuid" % "<version>"
+libraryDependencies += "me.wojnowski" %% "scuid-circe" % "<version>"
 ```
 
 ### Usage (Cats Effect)
@@ -71,7 +72,14 @@ val idLong: Option[Cuid2Long]               = Cuid2Long.validate("tzwxyg5tav24zm
 val idCustomLength: Option[Cuid2Custom[10]] = Cuid2Custom.validate[10]("axcf7v6n1w")
 ```
 
+## Circe integration
+Use the following import for Cuid2 codecs:
+
+```scala
+import me.wojnowski.scuid.circe._
+```
+
 ## TODO
-- [ ] Circe integration
+- [x] Circe integration
 - [ ] Tapir integration
 - [ ] ZIO integration
