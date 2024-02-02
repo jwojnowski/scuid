@@ -19,36 +19,30 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.wojnowski.scuid
+package me.wojnowski.scuid.tapir
 
-import org.scalacheck.Gen
-import org.scalacheck.Prop
+import me.wojnowski.scuid.Cuid2
+import me.wojnowski.scuid.Cuid2Custom
+import me.wojnowski.scuid.Cuid2Long
 
-import munit.ScalaCheckSuite
+import sttp.tapir.Codec
+import sttp.tapir.Codec.PlainCodec
+import sttp.tapir.Schema
 
-class Cuid2ValidationTest extends ScalaCheckSuite with Generators {
-  property("Validate - succeeds for valid CUID2") {
-    Prop.forAll(validRawCuidGen(27)) { rawCuid =>
-      assertEquals(Cuid2Custom.validate[27](rawCuid).map(_.render), Some(rawCuid))
-    }
-  }
+trait TapirCodec {
+  implicit val schemaForCuid2: Schema[Cuid2] = Schema.string.format("Cuid2 (length 24)")
 
-  property("Validate - fails with non-lowercase first character") {
-    Prop.forAll(rawCuidLikeGen(nonLowercaseGen, lowercaseAlphanumGen, 27)) { rawCuid =>
-      assertEquals(Cuid2Custom.validate[27](rawCuid), None)
-    }
-  }
+  implicit val codecForCuid2: PlainCodec[Cuid2] =
+    Codec.string.mapEither(Cuid2.validate(_).toRight("Invalid Cuid2 (length 24)"))(_.render)
 
-  property("Validate - fails with non-lowercase alphanum characters following the letter") {
-    Prop.forAll(rawCuidLikeGen(lowercaseGen, nonLowercaseAlphanumGen, 27)) { rawCuid =>
-      assertEquals(Cuid2Custom.validate[27](rawCuid), None)
-    }
-  }
+  implicit val schemaForCuid2Long: Schema[Cuid2Long] = Schema.string.format("Cuid2 (length 24)")
 
-  test("Validate - fails with incorrect length") {
-    Prop.forAll(Gen.chooseNum(4, 64).suchThat(_ != 27).flatMap(length => validRawCuidGen(length))) { rawCuid =>
-      assertEquals(Cuid2Custom.validate[27](rawCuid), None)
-    }
-  }
+  implicit val codecForCuid2Long: PlainCodec[Cuid2Long] =
+    Codec.string.mapEither(Cuid2Long.validate(_).toRight("Invalid Cuid2 (length 24)"))(_.render)
 
+  implicit def schemaForCuid2Custom[L <: Int](implicit L: ValueOf[L]): Schema[Cuid2Custom[L]] =
+    Schema.string.format(s"Cuid2 (length ${L.value})")
+
+  implicit def codecForCuid2Custom[L <: Int](implicit L: ValueOf[L]): PlainCodec[Cuid2Custom[L]] =
+    Codec.string.mapEither(Cuid2Custom.validate[L](_).toRight(s"Invalid Cuid2 (length ${L.value})"))(_.render)
 }

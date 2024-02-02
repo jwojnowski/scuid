@@ -22,33 +22,29 @@
 package me.wojnowski.scuid
 
 import org.scalacheck.Gen
-import org.scalacheck.Prop
 
-import munit.ScalaCheckSuite
+trait Generators {
+  private val printableChars = 32.toChar to 126.toChar
 
-class Cuid2ValidationTest extends ScalaCheckSuite with Generators {
-  property("Validate - succeeds for valid CUID2") {
-    Prop.forAll(validRawCuidGen(27)) { rawCuid =>
-      assertEquals(Cuid2Custom.validate[27](rawCuid).map(_.render), Some(rawCuid))
+  val lowercaseGen: Gen[Char] = Gen.alphaLowerChar
+
+  val nonLowercaseGen: Gen[Char] = Gen.oneOf(printableChars.filterNot(_.isLower))
+
+  val lowercaseAlphanumGen: Gen[Char] = Gen.oneOf(lowercaseGen, Gen.numChar)
+
+  val nonLowercaseAlphanumGen: Gen[Char] = Gen.oneOf(printableChars.filterNot(_.isLower).filterNot(_.isDigit))
+
+  def validRawCuidGen(length: Int): Gen[String] = rawCuidLikeGen(lowercaseGen, lowercaseAlphanumGen, length)
+
+  def rawCuidLikeGen(firstChar: Gen[Char], otherChars: Gen[Char], length: Int): Gen[String] =
+    for {
+      firstLetter <- firstChar
+      otherChars  <- Gen.stringOfN(length - 1, otherChars)
+    } yield s"$firstLetter$otherChars"
+
+  def validRawCuid2GenRandomLengthButNot(length: Int): Gen[String] =
+    Gen.chooseNum(4, 36).retryUntil(_ != length).flatMap { length =>
+      validRawCuidGen(length)
     }
-  }
-
-  property("Validate - fails with non-lowercase first character") {
-    Prop.forAll(rawCuidLikeGen(nonLowercaseGen, lowercaseAlphanumGen, 27)) { rawCuid =>
-      assertEquals(Cuid2Custom.validate[27](rawCuid), None)
-    }
-  }
-
-  property("Validate - fails with non-lowercase alphanum characters following the letter") {
-    Prop.forAll(rawCuidLikeGen(lowercaseGen, nonLowercaseAlphanumGen, 27)) { rawCuid =>
-      assertEquals(Cuid2Custom.validate[27](rawCuid), None)
-    }
-  }
-
-  test("Validate - fails with incorrect length") {
-    Prop.forAll(Gen.chooseNum(4, 64).suchThat(_ != 27).flatMap(length => validRawCuidGen(length))) { rawCuid =>
-      assertEquals(Cuid2Custom.validate[27](rawCuid), None)
-    }
-  }
 
 }
