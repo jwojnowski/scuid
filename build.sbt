@@ -1,5 +1,5 @@
 // https://typelevel.org/sbt-typelevel/faq.html#what-is-a-base-version-anyway
-ThisBuild / tlBaseVersion := "0.1" // your current series x.y
+ThisBuild / tlBaseVersion := "0.2" // your current series x.y
 
 ThisBuild / organization     := "me.wojnowski"
 ThisBuild / organizationName := "Jakub Wojnowski"
@@ -18,7 +18,7 @@ val Scala213 = "2.13.12"
 ThisBuild / crossScalaVersions := Seq(Scala213, "3.3.1")
 ThisBuild / scalaVersion       := Scala213 // the default Scala
 
-lazy val root = tlCrossRootProject.aggregate(core)
+lazy val root = tlCrossRootProject.aggregate(core, circe, tapir)
 
 lazy val core =
   project
@@ -39,7 +39,7 @@ lazy val core =
 lazy val circe =
   project
     .in(file("circe"))
-    .dependsOn(core)
+    .dependsOn(core % "compile->compile;test->test")
     .settings(
       name := "scuid-circe",
       libraryDependencies ++= Seq(
@@ -47,5 +47,16 @@ lazy val circe =
         "io.circe"      %% "circe-literal"    % "0.14.6" % Test,
         "org.scalameta" %% "munit"            % "0.7.29" % Test,
         "org.scalameta" %% "munit-scalacheck" % "0.7.29" % Test
+      )
+    )
+
+lazy val tapir =
+  project
+    .in(file("tapir"))
+    .dependsOn(core % "compile->compile;test->test")
+    .settings(
+      name := "scuid-tapir",
+      libraryDependencies ++= Seq(
+        "com.softwaremill.sttp.tapir" %% "tapir-core" % "1.9.6"
       )
     )

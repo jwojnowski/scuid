@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.wojnowski.scuid.circe
+package me.wojnowski.scuid.tapir
 
 import me.wojnowski.scuid.Cuid2
 import me.wojnowski.scuid.Cuid2Custom
@@ -29,53 +29,77 @@ import me.wojnowski.scuid.Generators
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Test
 
-import io.circe.syntax.*
-import munit.ScalaCheckSuite
+import scala.annotation.unused
 
-class CodecsTest extends ScalaCheckSuite with Generators {
+import munit.ScalaCheckSuite
+import sttp.tapir.Codec.PlainCodec
+import sttp.tapir.DecodeResult
+
+class TapirCodecTest extends ScalaCheckSuite with Generators {
   override protected def scalaCheckTestParameters: Test.Parameters =
     super.scalaCheckTestParameters.withMinSuccessfulTests(200)
 
   test("Cuid2 encoding/decoding (success)") {
     forAll(validRawCuidGen(24)) { rawCuid2 =>
       val cuid2 = Cuid2.validate(rawCuid2).get
-      assertEquals(cuid2.asJson, rawCuid2.asJson)
-      assertEquals(rawCuid2.asJson.as[Cuid2], Right(cuid2))
+
+      assertEquals(implicitly[PlainCodec[Cuid2]].encode(cuid2), rawCuid2)
+      assertEquals(implicitly[PlainCodec[Cuid2]].decode(rawCuid2), DecodeResult.Value(cuid2))
     }
   }
 
   test("Cuid2 decoding (failure)") {
     forAll(validRawCuid2GenRandomLengthButNot(24)) { rawInvalidCuid2 =>
-      assert(rawInvalidCuid2.asJson.as[Cuid2].isLeft)
+      assert(implicitly[PlainCodec[Cuid2]].decode(rawInvalidCuid2).isInstanceOf[DecodeResult.Failure])
     }
   }
 
   test("Cuid2Long encoding/decoding (success)") {
     forAll(validRawCuidGen(32)) { rawCuid2 =>
       val cuid2 = Cuid2Long.validate(rawCuid2).get
-      assertEquals(cuid2.asJson, rawCuid2.asJson)
-      assertEquals(rawCuid2.asJson.as[Cuid2Long], Right(cuid2))
+      assertEquals(implicitly[PlainCodec[Cuid2Long]].encode(cuid2), rawCuid2)
+      assertEquals(implicitly[PlainCodec[Cuid2Long]].decode(rawCuid2), DecodeResult.Value(cuid2))
     }
   }
 
   test("Cuid2Long decoding (failure)") {
     forAll(validRawCuid2GenRandomLengthButNot(32)) { rawInvalidCuid2 =>
-      assert(rawInvalidCuid2.asJson.as[Cuid2Long].isLeft)
+      assert(implicitly[PlainCodec[Cuid2Long]].decode(rawInvalidCuid2).isInstanceOf[DecodeResult.Failure])
     }
   }
 
   test("Cuid2Custom encoding/decoding (success)") {
     forAll(validRawCuidGen(27)) { rawCuid2 =>
       val cuid2 = Cuid2Custom.validate[27](rawCuid2).get
-      assertEquals(cuid2.asJson, rawCuid2.asJson)
-      assertEquals(rawCuid2.asJson.as[Cuid2Custom[27]], Right(cuid2))
+      assertEquals(implicitly[PlainCodec[Cuid2Custom[27]]].encode(cuid2), rawCuid2)
+      assertEquals(implicitly[PlainCodec[Cuid2Custom[27]]].decode(rawCuid2), DecodeResult.Value(cuid2))
     }
   }
 
   test("Cuid2Custom decoding (failure)") {
     forAll(validRawCuid2GenRandomLengthButNot(27)) { rawInvalidCuid2 =>
-      assert(rawInvalidCuid2.asJson.as[Cuid2Custom[27]].isLeft)
+      assert(implicitly[PlainCodec[Cuid2Custom[27]]].decode(rawInvalidCuid2).isInstanceOf[DecodeResult.Failure])
     }
+  }
+
+  test("Cuid2 used in an endpoint compiles") {
+    import sttp.tapir.*
+
+    @unused("just needs to compile")
+    val schema1 = implicitly[Schema[Cuid2]]
+
+    @unused("just needs to compile")
+    val schema2 = implicitly[Schema[Cuid2Long]]
+
+    @unused("just needs to compile")
+    val schema3 = implicitly[Schema[Cuid2Custom[27]]]
+
+    @unused("just needs to compile")
+    val cuid2Endpoint: Endpoint[Unit, (Cuid2, Cuid2Long, Cuid2Custom[27]), Unit, Cuid2, Any] =
+      endpoint
+        .get
+        .in("cuid24" / path[Cuid2] / "cuid32" / path[Cuid2Long] / "cuid27" / path[Cuid2Custom[27]])
+        .out(plainBody[Cuid2])
   }
 
 }

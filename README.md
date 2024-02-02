@@ -81,5 +81,5 @@ import me.wojnowski.scuid.circe._
 
 ## TODO
 - [x] Circe integration
-- [ ] Tapir integration
+- [x] Tapir integration
 - [ ] ZIO integration
