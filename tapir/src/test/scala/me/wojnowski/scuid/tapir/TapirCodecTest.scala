@@ -41,7 +41,7 @@ class TapirCodecTest extends ScalaCheckSuite with Generators {
 
   test("Cuid2 encoding/decoding (success)") {
     forAll(validRawCuidGen(24)) { rawCuid2 =>
-      val cuid2 = Cuid2.validate(rawCuid2).get
+      val cuid2 = Cuid2.unsafeFrom(rawCuid2)
 
       assertEquals(implicitly[PlainCodec[Cuid2]].encode(cuid2), rawCuid2)
       assertEquals(implicitly[PlainCodec[Cuid2]].decode(rawCuid2), DecodeResult.Value(cuid2))
@@ -56,7 +56,7 @@ class TapirCodecTest extends ScalaCheckSuite with Generators {
 
   test("Cuid2Long encoding/decoding (success)") {
     forAll(validRawCuidGen(32)) { rawCuid2 =>
-      val cuid2 = Cuid2Long.validate(rawCuid2).get
+      val cuid2 = Cuid2Long.unsafeFrom(rawCuid2)
       assertEquals(implicitly[PlainCodec[Cuid2Long]].encode(cuid2), rawCuid2)
       assertEquals(implicitly[PlainCodec[Cuid2Long]].decode(rawCuid2), DecodeResult.Value(cuid2))
     }
@@ -70,7 +70,7 @@ class TapirCodecTest extends ScalaCheckSuite with Generators {
 
   test("Cuid2Custom encoding/decoding (success)") {
     forAll(validRawCuidGen(27)) { rawCuid2 =>
-      val cuid2 = Cuid2Custom.validate[27](rawCuid2).get
+      val cuid2 = Cuid2Custom.unsafeFrom[27](rawCuid2)
       assertEquals(implicitly[PlainCodec[Cuid2Custom[27]]].encode(cuid2), rawCuid2)
       assertEquals(implicitly[PlainCodec[Cuid2Custom[27]]].decode(rawCuid2), DecodeResult.Value(cuid2))
     }
