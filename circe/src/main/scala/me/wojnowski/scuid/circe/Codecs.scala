@@ -25,6 +25,8 @@ import me.wojnowski.scuid.Cuid2
 import me.wojnowski.scuid.Cuid2Custom
 import me.wojnowski.scuid.Cuid2Long
 
+import cats.implicits.toBifunctorOps
+
 import io.circe.Decoder
 import io.circe.Encoder
 
@@ -34,11 +36,11 @@ trait Codecs {
   implicit def cuid2CustomEncoder[L <: Int]: Encoder[Cuid2Custom[L]] = Encoder[String].contramap(_.render)
 
   implicit val cuid2Decoder: Decoder[Cuid2] =
-    Decoder[String].emap(Cuid2.validate(_).toRight("Invalid Cuid2 (length 24)"))
+    Decoder[String].emap(Cuid2.validate(_).leftMap(_.prettyMessage))
 
   implicit val cuid2LongDecoder: Decoder[Cuid2Long] =
-    Decoder[String].emap(Cuid2Long.validate(_).toRight("Invalid Cuid2 (length 32)"))
+    Decoder[String].emap(Cuid2Long.validate(_).leftMap(_.prettyMessage))
 
   implicit def cuid2CustomDecoder[L <: Int](implicit L: ValueOf[L]): Decoder[Cuid2Custom[L]] =
-    Decoder[String].emap(Cuid2Custom.validate(_).toRight(s"Invalid Cuid2 (length ${L.value})"))
+    Decoder[String].emap(Cuid2Custom.validate[L](_).leftMap(_.prettyMessage))
 }

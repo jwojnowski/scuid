@@ -29,25 +29,25 @@ import munit.ScalaCheckSuite
 class Cuid2ValidationTest extends ScalaCheckSuite with Generators {
   property("Validate - succeeds for valid CUID2") {
     Prop.forAll(validRawCuidGen(27)) { rawCuid =>
-      assertEquals(Cuid2Custom.validate[27](rawCuid).map(_.render), Some(rawCuid))
+      assertEquals(Cuid2Custom.validate[27](rawCuid).map(_.render), Right(rawCuid))
     }
   }
 
   property("Validate - fails with non-lowercase first character") {
     Prop.forAll(rawCuidLikeGen(nonLowercaseGen, lowercaseAlphanumGen, 27)) { rawCuid =>
-      assertEquals(Cuid2Custom.validate[27](rawCuid), None)
+      assertEquals(Cuid2Custom.validate[27](rawCuid), Left(ValidationError.InvalidFirstCharacter(rawCuid.head, rawCuid)))
     }
   }
 
   property("Validate - fails with non-lowercase alphanum characters following the letter") {
     Prop.forAll(rawCuidLikeGen(lowercaseGen, nonLowercaseAlphanumGen, 27)) { rawCuid =>
-      assertEquals(Cuid2Custom.validate[27](rawCuid), None)
+      assert(Cuid2Custom.validate[27](rawCuid).left.exists(_.isInstanceOf[ValidationError.InvalidCharacters]))
     }
   }
 
   test("Validate - fails with incorrect length") {
     Prop.forAll(Gen.chooseNum(4, 64).suchThat(_ != 27).flatMap(length => validRawCuidGen(length))) { rawCuid =>
-      assertEquals(Cuid2Custom.validate[27](rawCuid), None)
+      assertEquals(Cuid2Custom.validate[27](rawCuid), Left(ValidationError.WrongLength(27, rawCuid.length, rawCuid)))
     }
   }
 

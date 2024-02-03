@@ -21,7 +21,7 @@
 
 package me.wojnowski.scuid
 
-import me.wojnowski.scuid.Cuid2Custom.isValid
+import me.wojnowski.scuid.Cuid2Custom.createIfValid
 
 import cats.Id
 import cats.Monad
@@ -33,6 +33,7 @@ import cats.effect.std.SecureRandom
 import cats.implicits.*
 
 import scala.jdk.CollectionConverters.MapHasAsScala
+import scala.util.control.NoStackTrace
 
 import java.security.SecureRandom as JavaSecureRandom
 import java.security.MessageDigest
@@ -57,8 +58,11 @@ abstract sealed case class Cuid2(private val value: String)     extends Cuid2Cus
 abstract sealed case class Cuid2Long(private val value: String) extends Cuid2Custom[32](value) {}
 
 object Cuid2 {
-  def validate(rawString: String): Option[Cuid2] =
-    Option.when(isValid[24](rawString))(new Cuid2(rawString) {})
+  def validate(rawString: String): Either[ValidationError, Cuid2] =
+    createIfValid[24, Cuid2](rawString)(new Cuid2(_) {})
+
+  def unsafeFrom(rawString: String): Cuid2 =
+    validate(rawString).fold(throw _, identity)
 
   implicit val order: Order[Cuid2]       = Order.by(_.value)
   implicit val ordering: Ordering[Cuid2] = order.toOrdering
@@ -66,8 +70,11 @@ object Cuid2 {
 }
 
 object Cuid2Long {
-  def validate(rawString: String): Option[Cuid2Long] =
-    Option.when(isValid[32](rawString))(new Cuid2Long(rawString) {})
+  def validate(rawString: String): Either[ValidationError, Cuid2Long] =
+    createIfValid[32, Cuid2Long](rawString)(new Cuid2Long(_) {})
+
+  def unsafeFrom(rawString: String): Cuid2Long =
+    validate(rawString).fold(throw _, identity)
 
   implicit val order: Order[Cuid2Long]       = Order.by(_.value)
   implicit val ordering: Ordering[Cuid2Long] = order.toOrdering
@@ -79,15 +86,21 @@ object Cuid2Custom {
   implicit def ordering[L <: Int]: Ordering[Cuid2Custom[L]] = order[L].toOrdering
   implicit def show[L <: Int]: Show[Cuid2Custom[L]]         = Show.show(_.value)
 
-  def validate[L <: Int: ValueOf](rawString: String): Option[Cuid2Custom[L]] =
-    Option.when(isValid[L](rawString))(new Cuid2Custom(rawString) {})
+  def validate[L <: Int: ValueOf](rawString: String): Either[ValidationError, Cuid2Custom[L]] =
+    createIfValid[L, Cuid2Custom[L]](rawString)(new Cuid2Custom(_) {})
 
-  private[scuid] def isValid[L <: Int: ValueOf](rawString: String): Boolean =
-    List[String => Boolean](
-      _.headOption.forall(_.isLower),
-      _.length === valueOf[L],
-      _.drop(1).forall(char => char.isLower || char.isDigit)
-    ).forall(_.apply(rawString))
+  def unsafeFrom[L <: Int: ValueOf](rawString: String): Cuid2Custom[L] =
+    validate[L](rawString).fold(throw _, identity)
+
+  private[scuid] def createIfValid[L <: Int: ValueOf, C](rawString: String)(f: String => C): Either[ValidationError, C] =
+    if (rawString.length != valueOf[L])
+      Left(ValidationError.WrongLength(expected = valueOf[L], got = rawString.length, rawString))
+    else if (!rawString(0).isLower)
+      Left(ValidationError.InvalidFirstCharacter(rawString(0), rawString))
+    else if (!rawString.forall(char => char.isLower || char.isDigit))
+      Left(ValidationError.InvalidCharacters(rawString.filterNot(char => char.isLower || char.isDigit).toSet, rawString))
+    else
+      Right(f(rawString))
 
 }
 
@@ -184,6 +197,42 @@ object Cuid2Gen {
         .replicateA(length)
         .map(_.mkString)
 
+  }
+
+}
+
+sealed trait ValidationError extends NoStackTrace with Product with Serializable {
+
+  override def toString: String = {
+    val elements = productIterator
+      .zip(productElementNames)
+      .map { case (value, name) =>
+        s"$name = $value"
+      }
+      .mkString(", ")
+
+    s"${ValidationError.productPrefix}.$productPrefix($elements)"
+  }
+
+  def rawValue: String
+
+  def prettyMessage: String = s"[$rawValue] is not a valid Cuid2. $details"
+
+  def details: String
+}
+
+case object ValidationError {
+
+  case class WrongLength(expected: Int, got: Int, rawValue: String) extends ValidationError {
+    def details: String = s"Wrong length: expected $expected, got $got"
+  }
+
+  case class InvalidFirstCharacter(first: Char, rawValue: String) extends ValidationError {
+    def details: String = s"First character [$first] is not a lowercase letter"
+  }
+
+  case class InvalidCharacters(invalidCharacters: Set[Char], rawValue: String) extends ValidationError {
+    def details: String = s"Invalid characters: ${invalidCharacters.mkString}"
   }
 
 }

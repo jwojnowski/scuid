@@ -67,10 +67,12 @@ This library uses SHA3, which is available from JDK 9 (b119) onwards. Alternativ
 
 ## Validation
 ```scala
-val idDefault: Option[Cuid2]                = Cuid2.validate("r0o5ncoizclu1b9iraz620cn")
-val idLong: Option[Cuid2Long]               = Cuid2Long.validate("tzwxyg5tav24zm8ycsrtpfi0njhegmes")
-val idCustomLength: Option[Cuid2Custom[10]] = Cuid2Custom.validate[10]("axcf7v6n1w")
+val idDefault: Either[ValidationError, Cuid2]                = Cuid2.validate("r0o5ncoizclu1b9iraz620cn")
+val idLong: Either[ValidationError, Cuid2Long]               = Cuid2Long.validate("tzwxyg5tav24zm8ycsrtpfi0njhegmes")
+val idCustomLength: Either[ValidationError, Cuid2Custom[10]] = Cuid2Custom.validate[10]("axcf7v6n1w")
 ```
+
+`ValidationError` is an ADT, which offers `prettyMessage` method for easy conversion to `String`.
 
 ## Circe integration
 Use the following import for Cuid2 codecs:

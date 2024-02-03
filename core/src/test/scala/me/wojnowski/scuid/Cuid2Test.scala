@@ -30,146 +30,146 @@ import munit.ScalaCheckSuite
 class Cuid2Test extends ScalaCheckSuite {
 
   test("Cuid2 - equals (same)") {
-    val cuidA = Cuid2.validate("ynl1pm6yt50t452nb9n14ick").get
-    val cuidB = Cuid2.validate("ynl1pm6yt50t452nb9n14ick").get
+    val cuidA = Cuid2.unsafeFrom("ynl1pm6yt50t452nb9n14ick")
+    val cuidB = Cuid2.unsafeFrom("ynl1pm6yt50t452nb9n14ick")
 
     assert(cuidA == cuidB)
   }
 
   test("Cuid2 - equals (different)") {
-    val cuidA = Cuid2.validate("ynl1pm6yt50t452nb9n14ick").get
-    val cuidB = Cuid2.validate("x1oqtldjj6gdk4eewnc589hh").get
+    val cuidA = Cuid2.unsafeFrom("ynl1pm6yt50t452nb9n14ick")
+    val cuidB = Cuid2.unsafeFrom("x1oqtldjj6gdk4eewnc589hh")
 
     assert(cuidA != cuidB)
   }
 
   test("Cuid2 - Eq (same)") {
-    val cuidA = Cuid2.validate("cnfmhdzvebldt1js6tca962v").get
-    val cuidB = Cuid2.validate("cnfmhdzvebldt1js6tca962v").get
+    val cuidA = Cuid2.unsafeFrom("cnfmhdzvebldt1js6tca962v")
+    val cuidB = Cuid2.unsafeFrom("cnfmhdzvebldt1js6tca962v")
 
     assert(cuidA === cuidB)
   }
 
   test("Cuid2 - Eq (different)") {
 
-    val cuidA = Cuid2.validate("cnfmhdzvebldt1js6tca962v").get
-    val cuidB = Cuid2.validate("x1oqtldjj6gdk4eewnc589hh").get
+    val cuidA = Cuid2.unsafeFrom("cnfmhdzvebldt1js6tca962v")
+    val cuidB = Cuid2.unsafeFrom("x1oqtldjj6gdk4eewnc589hh")
 
     assert(cuidA =!= cuidB)
   }
 
   test("Cuid2 - Order") {
 
-    val cuidA = Cuid2.validate("cnfmhdzvebldt1js6tca962v").get
-    val cuidB = Cuid2.validate("x1oqtldjj6gdk4eewnc589hh").get
-    val cuidC = Cuid2.validate("ynl1pm6yt50t452nb9n14ick").get
+    val cuidA = Cuid2.unsafeFrom("cnfmhdzvebldt1js6tca962v")
+    val cuidB = Cuid2.unsafeFrom("x1oqtldjj6gdk4eewnc589hh")
+    val cuidC = Cuid2.unsafeFrom("ynl1pm6yt50t452nb9n14ick")
 
     assertEquals(NonEmptyList.of(cuidC, cuidB, cuidA).sorted, NonEmptyList.of(cuidA, cuidB, cuidC))
   }
 
   test("Cuid2 - Show") {
-    val cuidA = Cuid2.validate("cnfmhdzvebldt1js6tca962v").get
+    val cuidA = Cuid2.unsafeFrom("cnfmhdzvebldt1js6tca962v")
     assertEquals(cuidA.show, "cnfmhdzvebldt1js6tca962v")
   }
 
   test("Cuid2 - toString") {
-    val cuidA = Cuid2.validate("cnfmhdzvebldt1js6tca962v").get
+    val cuidA = Cuid2.unsafeFrom("cnfmhdzvebldt1js6tca962v")
     assertEquals(cuidA.toString, "cnfmhdzvebldt1js6tca962v")
   }
 
   test("Cuid2Long - equals (same)") {
-    val cuidA = Cuid2Long.validate("ynl1pm6yt50t452nb9n14ickjt438ius").get
-    val cuidB = Cuid2Long.validate("ynl1pm6yt50t452nb9n14ickjt438ius").get
+    val cuidA = Cuid2Long.unsafeFrom("ynl1pm6yt50t452nb9n14ickjt438ius")
+    val cuidB = Cuid2Long.unsafeFrom("ynl1pm6yt50t452nb9n14ickjt438ius")
 
     assert(cuidA == cuidB)
   }
 
   test("Cuid2Long - equals (different)") {
-    val cuidA = Cuid2Long.validate("ynl1pm6yt50t452nb9n14ickjt438ius").get
-    val cuidB = Cuid2Long.validate("x1oqtldjj6gdk4eewnc589hhrk6btxxr").get
+    val cuidA = Cuid2Long.unsafeFrom("ynl1pm6yt50t452nb9n14ickjt438ius")
+    val cuidB = Cuid2Long.unsafeFrom("x1oqtldjj6gdk4eewnc589hhrk6btxxr")
 
     assert(cuidA != cuidB)
   }
 
   test("Cuid2Long - Eq (same)") {
-    val cuidA = Cuid2Long.validate("cnfmhdzvebldt1js6tca962vx3hjxivs").get
-    val cuidB = Cuid2Long.validate("cnfmhdzvebldt1js6tca962vx3hjxivs").get
+    val cuidA = Cuid2Long.unsafeFrom("cnfmhdzvebldt1js6tca962vx3hjxivs")
+    val cuidB = Cuid2Long.unsafeFrom("cnfmhdzvebldt1js6tca962vx3hjxivs")
 
     assert(cuidA === cuidB)
   }
 
   test("Cuid2Long - Eq (different)") {
 
-    val cuidA = Cuid2Long.validate("cnfmhdzvebldt1js6tca962vx3hjxivs").get
-    val cuidB = Cuid2Long.validate("x1oqtldjj6gdk4eewnc589hhrk6btxxr").get
+    val cuidA = Cuid2Long.unsafeFrom("cnfmhdzvebldt1js6tca962vx3hjxivs")
+    val cuidB = Cuid2Long.unsafeFrom("x1oqtldjj6gdk4eewnc589hhrk6btxxr")
 
     assert(cuidA =!= cuidB)
   }
 
   test("Cuid2Long - Order") {
 
-    val cuidA = Cuid2Long.validate("cnfmhdzvebldt1js6tca962vx3hjxivs").get
-    val cuidB = Cuid2Long.validate("x1oqtldjj6gdk4eewnc589hhrk6btxxr").get
-    val cuidC = Cuid2Long.validate("ynl1pm6yt50t452nb9n14ickjt438ius").get
+    val cuidA = Cuid2Long.unsafeFrom("cnfmhdzvebldt1js6tca962vx3hjxivs")
+    val cuidB = Cuid2Long.unsafeFrom("x1oqtldjj6gdk4eewnc589hhrk6btxxr")
+    val cuidC = Cuid2Long.unsafeFrom("ynl1pm6yt50t452nb9n14ickjt438ius")
 
     assertEquals(NonEmptyList.of(cuidC, cuidB, cuidA).sorted, NonEmptyList.of(cuidA, cuidB, cuidC))
   }
 
   test("Cuid2Long - Show") {
-    val cuidA = Cuid2Long.validate("cnfmhdzvebldt1js6tca962vx3hjxivs").get
+    val cuidA = Cuid2Long.unsafeFrom("cnfmhdzvebldt1js6tca962vx3hjxivs")
     assertEquals(cuidA.show, "cnfmhdzvebldt1js6tca962vx3hjxivs")
   }
 
   test("Cuid2Long - toString") {
-    val cuidA = Cuid2Long.validate("cnfmhdzvebldt1js6tca962vx3hjxivs").get
+    val cuidA = Cuid2Long.unsafeFrom("cnfmhdzvebldt1js6tca962vx3hjxivs")
     assertEquals(cuidA.toString, "cnfmhdzvebldt1js6tca962vx3hjxivs")
   }
 
   test("Cuid2Custom - equals (same)") {
-    val cuidA = Cuid2Custom.validate[10]("ynl1pm6yt5").get
-    val cuidB = Cuid2Custom.validate[10]("ynl1pm6yt5").get
+    val cuidA = Cuid2Custom.unsafeFrom[10]("ynl1pm6yt5")
+    val cuidB = Cuid2Custom.unsafeFrom[10]("ynl1pm6yt5")
 
     assert(cuidA == cuidB)
   }
 
   test("Cuid2Custom - equals (different)") {
-    val cuidA = Cuid2Custom.validate[10]("ynl1pm6yt5").get
-    val cuidB = Cuid2Custom.validate[10]("x1oqtldjj6").get
+    val cuidA = Cuid2Custom.unsafeFrom[10]("ynl1pm6yt5")
+    val cuidB = Cuid2Custom.unsafeFrom[10]("x1oqtldjj6")
 
     assert(cuidA != cuidB)
   }
 
   test("Cuid2Custom - Eq (same)") {
-    val cuidA = Cuid2Custom.validate[10]("cnfmhdzveb").get
-    val cuidB = Cuid2Custom.validate[10]("cnfmhdzveb").get
+    val cuidA = Cuid2Custom.unsafeFrom[10]("cnfmhdzveb")
+    val cuidB = Cuid2Custom.unsafeFrom[10]("cnfmhdzveb")
 
     assert(cuidA === cuidB)
   }
 
   test("Cuid2Custom - Eq (different)") {
 
-    val cuidA = Cuid2Custom.validate[10]("cnfmhdzveb").get
-    val cuidB = Cuid2Custom.validate[10]("x1oqtldjj6").get
+    val cuidA = Cuid2Custom.unsafeFrom[10]("cnfmhdzveb")
+    val cuidB = Cuid2Custom.unsafeFrom[10]("x1oqtldjj6")
 
     assert(cuidA =!= cuidB)
   }
 
   test("Cuid2Custom - Order") {
 
-    val cuidA = Cuid2Custom.validate[10]("cnfmhdzveb").get
-    val cuidB = Cuid2Custom.validate[10]("x1oqtldjj6").get
-    val cuidC = Cuid2Custom.validate[10]("ynl1pm6yt5").get
+    val cuidA = Cuid2Custom.unsafeFrom[10]("cnfmhdzveb")
+    val cuidB = Cuid2Custom.unsafeFrom[10]("x1oqtldjj6")
+    val cuidC = Cuid2Custom.unsafeFrom[10]("ynl1pm6yt5")
 
     assertEquals(NonEmptyList.of(cuidC, cuidB, cuidA).sorted, NonEmptyList.of(cuidA, cuidB, cuidC))
   }
 
   test("Cuid2Custom - Show") {
-    val cuidA = Cuid2Custom.validate[10]("cnfmhdzveb").get
+    val cuidA = Cuid2Custom.unsafeFrom[10]("cnfmhdzveb")
     assertEquals(cuidA.show, "cnfmhdzveb")
   }
 
   test("Cuid2Custom - toString") {
-    val cuidA = Cuid2Custom.validate[10]("cnfmhdzveb").get
+    val cuidA = Cuid2Custom.unsafeFrom[10]("cnfmhdzveb")
     assertEquals(cuidA.toString, "cnfmhdzveb")
   }
 

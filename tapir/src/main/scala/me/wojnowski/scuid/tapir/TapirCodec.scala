@@ -25,6 +25,8 @@ import me.wojnowski.scuid.Cuid2
 import me.wojnowski.scuid.Cuid2Custom
 import me.wojnowski.scuid.Cuid2Long
 
+import cats.implicits.toBifunctorOps
+
 import sttp.tapir.Codec
 import sttp.tapir.Codec.PlainCodec
 import sttp.tapir.Schema
@@ -33,16 +35,16 @@ trait TapirCodec {
   implicit val schemaForCuid2: Schema[Cuid2] = Schema.string.format("Cuid2 (length 24)")
 
   implicit val codecForCuid2: PlainCodec[Cuid2] =
-    Codec.string.mapEither(Cuid2.validate(_).toRight("Invalid Cuid2 (length 24)"))(_.render)
+    Codec.string.mapEither(Cuid2.validate(_).leftMap(_.prettyMessage))(_.render)
 
-  implicit val schemaForCuid2Long: Schema[Cuid2Long] = Schema.string.format("Cuid2 (length 24)")
+  implicit val schemaForCuid2Long: Schema[Cuid2Long] = Schema.string.format("Cuid2 (length 32)")
 
   implicit val codecForCuid2Long: PlainCodec[Cuid2Long] =
-    Codec.string.mapEither(Cuid2Long.validate(_).toRight("Invalid Cuid2 (length 24)"))(_.render)
+    Codec.string.mapEither(Cuid2Long.validate(_).leftMap(_.prettyMessage))(_.render)
 
   implicit def schemaForCuid2Custom[L <: Int](implicit L: ValueOf[L]): Schema[Cuid2Custom[L]] =
     Schema.string.format(s"Cuid2 (length ${L.value})")
 
   implicit def codecForCuid2Custom[L <: Int](implicit L: ValueOf[L]): PlainCodec[Cuid2Custom[L]] =
-    Codec.string.mapEither(Cuid2Custom.validate[L](_).toRight(s"Invalid Cuid2 (length ${L.value})"))(_.render)
+    Codec.string.mapEither(Cuid2Custom.validate[L](_).leftMap(_.prettyMessage))(_.render)
 }
