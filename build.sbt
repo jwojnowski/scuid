@@ -14,7 +14,7 @@ ThisBuild / tlSonatypeUseLegacyHost    := false
 ThisBuild / tlCiReleaseBranches        := Seq("main")
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("21"))
 
-val Scala213 = "2.13.12"
+val Scala213 = "2.13.13"
 ThisBuild / crossScalaVersions := Seq(Scala213, "3.3.3")
 ThisBuild / scalaVersion       := Scala213 // the default Scala
 
