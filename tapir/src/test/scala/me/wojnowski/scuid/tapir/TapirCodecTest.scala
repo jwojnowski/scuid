@@ -83,7 +83,7 @@ class TapirCodecTest extends ScalaCheckSuite with Generators {
   }
 
   test("Cuid2 used in an endpoint compiles") {
-    import sttp.tapir.*
+    import sttp.tapir._
 
     @unused("just needs to compile")
     val schema1 = implicitly[Schema[Cuid2]]
