@@ -29,7 +29,7 @@ import me.wojnowski.scuid.Generators
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Test
 
-import io.circe.syntax.*
+import io.circe.syntax._
 import munit.ScalaCheckSuite
 
 class CodecsTest extends ScalaCheckSuite with Generators {

@@ -30,12 +30,12 @@ import cats.Show
 import cats.effect.Clock
 import cats.effect.Sync
 import cats.effect.std.SecureRandom
-import cats.implicits.*
+import cats.implicits._
 
 import scala.jdk.CollectionConverters.MapHasAsScala
 import scala.util.control.NoStackTrace
 
-import java.security.SecureRandom as JavaSecureRandom
+import java.security.{SecureRandom => JavaSecureRandom}
 import java.security.MessageDigest
 import java.util.concurrent.atomic.AtomicLong
 
