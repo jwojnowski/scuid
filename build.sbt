@@ -43,8 +43,8 @@ lazy val circe =
     .settings(
       name := "scuid-circe",
       libraryDependencies ++= Seq(
-        "io.circe"      %% "circe-core"       % "0.14.7",
-        "io.circe"      %% "circe-literal"    % "0.14.7" % Test,
+        "io.circe"      %% "circe-core"       % "0.14.8",
+        "io.circe"      %% "circe-literal"    % "0.14.8" % Test,
         "org.scalameta" %% "munit"            % "0.7.29" % Test,
         "org.scalameta" %% "munit-scalacheck" % "0.7.29" % Test
       )
