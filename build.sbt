@@ -32,7 +32,7 @@ lazy val core =
         "org.scalameta" %% "munit-scalacheck"        % "1.0.0"    % Test,
         "org.typelevel" %% "munit-cats-effect"       % "2.0.0"    % Test,
         "org.typelevel" %% "scalacheck-effect-munit" % "2.0.0-M2" % Test,
-        "co.fs2"        %% "fs2-core"                % "3.10.2"   % Test
+        "co.fs2"        %% "fs2-core"                % "3.11.0"   % Test
       )
     )
 
