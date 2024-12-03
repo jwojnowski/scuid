@@ -28,7 +28,7 @@ lazy val core =
       libraryDependencies ++= Seq(
         "org.typelevel" %% "cats-core"               % "2.12.0",
         "org.typelevel" %% "cats-effect"             % "3.5.7",
-        "org.scalameta" %% "munit"                   % "1.0.2"    % Test,
+        "org.scalameta" %% "munit"                   % "1.0.3"    % Test,
         "org.scalameta" %% "munit-scalacheck"        % "1.0.0"    % Test,
         "org.typelevel" %% "munit-cats-effect"       % "2.0.0"    % Test,
         "org.typelevel" %% "scalacheck-effect-munit" % "2.0.0-M2" % Test,
@@ -45,7 +45,7 @@ lazy val circe =
       libraryDependencies ++= Seq(
         "io.circe"      %% "circe-core"       % "0.14.10",
         "io.circe"      %% "circe-literal"    % "0.14.10" % Test,
-        "org.scalameta" %% "munit"            % "1.0.2"   % Test,
+        "org.scalameta" %% "munit"            % "1.0.3"   % Test,
         "org.scalameta" %% "munit-scalacheck" % "1.0.0"   % Test
       )
     )
