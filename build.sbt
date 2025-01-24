@@ -29,7 +29,7 @@ lazy val core =
         "org.typelevel" %% "cats-core"               % "2.13.0",
         "org.typelevel" %% "cats-effect"             % "3.5.7",
         "org.scalameta" %% "munit"                   % "1.1.0"    % Test,
-        "org.scalameta" %% "munit-scalacheck"        % "1.0.0"    % Test,
+        "org.scalameta" %% "munit-scalacheck"        % "1.1.0"    % Test,
         "org.typelevel" %% "munit-cats-effect"       % "2.0.0"    % Test,
         "org.typelevel" %% "scalacheck-effect-munit" % "2.0.0-M2" % Test,
         "co.fs2"        %% "fs2-core"                % "3.11.0"   % Test
@@ -46,7 +46,7 @@ lazy val circe =
         "io.circe"      %% "circe-core"       % "0.14.10",
         "io.circe"      %% "circe-literal"    % "0.14.10" % Test,
         "org.scalameta" %% "munit"            % "1.1.0"   % Test,
-        "org.scalameta" %% "munit-scalacheck" % "1.0.0"   % Test
+        "org.scalameta" %% "munit-scalacheck" % "1.1.0"   % Test
       )
     )
 
