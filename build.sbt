@@ -10,8 +10,7 @@ ThisBuild / developers       := List(
   tlGitHubDev("jwojnowski", "Jakub Wojnowski")
 )
 
-ThisBuild / tlSonatypeUseLegacyHost    := false
-ThisBuild / tlCiReleaseBranches        := Seq("main")
+ThisBuild / tlCiReleaseBranches        := Seq()
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("21"))
 
 val Scala213 = "2.13.16"
