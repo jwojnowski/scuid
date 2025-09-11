@@ -14,7 +14,7 @@ ThisBuild / tlCiReleaseBranches        := Seq()
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("21"))
 
 val Scala213 = "2.13.16"
-ThisBuild / crossScalaVersions := Seq(Scala213, "3.7.2")
+ThisBuild / crossScalaVersions := Seq(Scala213, "3.7.3")
 ThisBuild / scalaVersion       := Scala213 // the default Scala
 
 lazy val root = tlCrossRootProject.aggregate(core, circe, tapir)
