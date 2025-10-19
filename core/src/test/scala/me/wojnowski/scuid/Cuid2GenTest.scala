@@ -35,37 +35,37 @@ class Cuid2GenTest extends CatsEffectSuite with ScalaCheckEffectSuite {
   val generator: Cuid2Gen[IO] = Cuid2Gen.default[IO].unsafeRunSync()
 
   test("Generate - Starts with a lowercase letter") {
-    PropF.forAllF(Gen.const(())) { _ =>
+    PropF.forAllF[IO, Unit, IO[Unit]](Gen.const(())) { _ =>
       generator.generate.map(cuid => assert(cuid.render.head.isLower))
     }
   }
 
   test("Generate - Consists of lowercase letters and numbers") {
-    PropF.forAllF(Gen.const(())) { _ =>
+    PropF.forAllF[IO, Unit, IO[Unit]](Gen.const(())) { _ =>
       generator.generate.map(cuid => assert(cuid.render.forall(char => char.isLower || char.isDigit)))
     }
   }
 
   test("Generate - Length is consistent (default)") {
-    PropF.forAllF(Gen.const(())) { _ =>
+    PropF.forAllF[IO, Unit, IO[Unit]](Gen.const(())) { _ =>
       generator.generate.map(cuid => assertEquals(cuid.render.length, 24))
     }
   }
 
   test("Generate - Length is consistent (long)") {
-    PropF.forAllF(Gen.const(())) { _ =>
+    PropF.forAllF[IO, Unit, IO[Unit]](Gen.const(())) { _ =>
       generator.generateLong.map(cuid => assertEquals(cuid.render.length, 32))
     }
   }
 
   test("Generate - Length is consistent (custom length - shorter)") {
-    PropF.forAllF(Gen.const(())) { _ =>
+    PropF.forAllF[IO, Unit, IO[Unit]](Gen.const(())) { _ =>
       generator.generateCustomLength[10].map(cuid => assertEquals(cuid.render.length, 10))
     }
   }
 
   test("Generate - Length is consistent (custom length - between)") {
-    PropF.forAllF(Gen.const(())) { _ =>
+    PropF.forAllF[IO, Unit, IO[Unit]](Gen.const(())) { _ =>
       generator.generateCustomLength[27].map(cuid => assertEquals(cuid.render.length, 27))
     }
   }
