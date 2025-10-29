@@ -56,6 +56,6 @@ lazy val tapir =
     .settings(
       name := "scuid-tapir",
       libraryDependencies ++= Seq(
-        "com.softwaremill.sttp.tapir" %% "tapir-core" % "1.11.50"
+        "com.softwaremill.sttp.tapir" %% "tapir-core" % "1.12.0"
       )
     )
