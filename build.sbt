@@ -11,6 +11,7 @@ ThisBuild / developers       := List(
 )
 
 ThisBuild / tlCiReleaseBranches        := Seq()
+ThisBuild / tlJdkRelease               := Some(21)
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec.temurin("21"))
 
 val Scala213 = "2.13.18"
