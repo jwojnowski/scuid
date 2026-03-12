@@ -27,7 +27,7 @@ lazy val core =
       name := "scuid",
       libraryDependencies ++= Seq(
         "org.typelevel" %% "cats-core"               % "2.13.0",
-        "org.typelevel" %% "cats-effect"             % "3.6.3",
+        "org.typelevel" %% "cats-effect"             % "3.7.0",
         "org.scalameta" %% "munit"                   % "1.2.4"  % Test,
         "org.scalameta" %% "munit-scalacheck"        % "1.2.0"  % Test,
         "org.typelevel" %% "munit-cats-effect"       % "2.2.0"  % Test,
