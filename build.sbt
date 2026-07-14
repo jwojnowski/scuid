@@ -43,8 +43,8 @@ lazy val circe =
     .settings(
       name := "scuid-circe",
       libraryDependencies ++= Seq(
-        "io.circe"      %% "circe-core"       % "0.14.15",
-        "io.circe"      %% "circe-literal"    % "0.14.15" % Test,
+        "io.circe"      %% "circe-core"       % "0.14.16",
+        "io.circe"      %% "circe-literal"    % "0.14.16" % Test,
         "org.scalameta" %% "munit"            % "1.3.3"   % Test,
         "org.scalameta" %% "munit-scalacheck" % "1.3.0"   % Test
       )
@@ -57,6 +57,6 @@ lazy val tapir =
     .settings(
       name := "scuid-tapir",
       libraryDependencies ++= Seq(
-        "com.softwaremill.sttp.tapir" %% "tapir-core" % "1.13.21"
+        "com.softwaremill.sttp.tapir" %% "tapir-core" % "1.13.25"
       )
     )
